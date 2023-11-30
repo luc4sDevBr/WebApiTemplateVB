@@ -1,0 +1,3 @@
+@Imports Unico.MaisCapitalApi.Areas.HelpPage.ModelDescriptions
+@ModelType SimpleTypeModelDescription
+@Model.Documentation
