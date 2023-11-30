@@ -4,6 +4,7 @@ Imports System.Web.Http
 Imports System.Web.Script.Serialization
 Imports Microsoft.Ajax.Utilities
 Imports Newtonsoft.Json
+Imports Unico.MaisCapitalApi.Variaveis
 
 Public Class ClientController
     Inherits ApiController
@@ -20,7 +21,7 @@ Public Class ClientController
     End Function
 
     ' GET api/Client/5
-    Public Function GetValue(ByVal id As Integer)As HttpResponseMessage
+    Public Function GetValue(ByVal id As Integer) As HttpResponseMessage
         Dim serialize As New JavaScriptSerializer
         Dim client = serialize.Serialize(Querys.RetornarClientePorId(id))
 
@@ -33,22 +34,26 @@ Public Class ClientController
     'Public Sub PostValue(<FromBody()> ByVal value As String)
 
     'End Sub
+
+
     Public Function Post(<FromBody> ByVal q) As HttpResponseMessage
         Try
+            Dim Objclient As RootCliente = JsonConvert.DeserializeObject(Of RootCliente)(q)
 
-            Dim strRsp As String = JsonConvert.SerializeObject(q, Newtonsoft.Json.Formatting.Indented)
-            Dim cliente = New ClientModels
-            cliente.Nome = IUnicoUtils.LocalizaTexto(strRsp, "Nome\"": \""", "\"",")
-            cliente.Cnpj = IUnicoUtils.LocalizaTexto(strRsp, "Cnpj\"": \""", "\"",")
-            cliente.Telefone = IUnicoUtils.LocalizaTexto(strRsp, "Telefone\"": \""", "\"",")
-            cliente.Email = IUnicoUtils.LocalizaTexto(strRsp, "Email\"": \""", "\"",")
+            Objclient.cliente.CodCliente = Regras.InsereCliente(Objclient)
+            Dim StatusCadastroResponse = Regras.VerificaStatusCadastro(Objclient.cliente.CodCliente)
 
-            Regras.VerificaInfoCliente(cliente)
+            Dim retornoPost As New PostRetornoModel
+            retornoPost.objCliente = Objclient.cliente
+            retornoPost.StatusCadastro = StatusCadastroResponse
 
 
+            Dim serialize As New JavaScriptSerializer
+            Dim clientresponse = serialize.Serialize(retornoPost)
             Dim res = Request.CreateResponse(HttpStatusCode.OK)
-            res.Content = New StringContent(strRsp, System.Text.Encoding.UTF8, "application/json")
+            res.Content = New StringContent($"{clientresponse}", System.Text.Encoding.UTF8, "application/json")
             Return res
+
         Catch ex As Exception
             Dim res = Request.CreateResponse(HttpStatusCode.BadRequest)
             Dim strError As String = $"""erro"":""Parâmetros nulo e/ou inválidos => {ex.Message}"""

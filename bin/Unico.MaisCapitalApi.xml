@@ -492,7 +492,7 @@ Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.Ap
  <param name="TextoFim"></param>
  <returns></returns>
 </member>
-<member name="M:Unico.MaisCapitalApi.Regras.VerificaInfoCliente(Unico.MaisCapitalApi.ClientModels)">
+<member name="M:Unico.MaisCapitalApi.Regras.InsereCliente(Unico.MaisCapitalApi.Variaveis.RootCliente)">
  <summary>
  Recebe um model cliente como parametro, realiza as validações e o insere no banco
  </summary>

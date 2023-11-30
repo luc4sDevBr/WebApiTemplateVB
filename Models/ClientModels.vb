@@ -6,5 +6,6 @@
     Public Cnpj As String = ""
     Public Telefone As String = ""
     Public Email As String = ""
+    Public CodstatusCliente As String = ""
 
 End Class
