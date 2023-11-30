@@ -8,35 +8,40 @@ Imports Newtonsoft.Json
 Public Class ClientController
     Inherits ApiController
 
-    ' GET api/values
-    Public Function GetValues()
+    ' GET api/Client
+    Public Function GetValues() As HttpResponseMessage
         Dim serialize As New JavaScriptSerializer
         Dim lista = serialize.Serialize(Querys.RetornarAllClients())
 
-
-        Return lista
+        Dim res = Request.CreateResponse(HttpStatusCode.OK)
+        res.Content = New StringContent(lista, System.Text.Encoding.UTF8, "application/json")
+        Return res
 
     End Function
 
-    ' GET api/values/5
-    Public Function GetValue(ByVal id As Integer)
+    ' GET api/Client/5
+    Public Function GetValue(ByVal id As Integer)As HttpResponseMessage
         Dim serialize As New JavaScriptSerializer
         Dim client = serialize.Serialize(Querys.RetornarClientePorId(id))
 
-        Return client
+        Dim res = Request.CreateResponse(HttpStatusCode.OK)
+        res.Content = New StringContent(client, System.Text.Encoding.UTF8, "application/json")
+        Return res
     End Function
 
-    ' POST api/values
+    ' POST api/Client
     'Public Sub PostValue(<FromBody()> ByVal value As String)
 
     'End Sub
-    Public Function Post(<FromBody> ByVal q As String) As HttpResponseMessage
+    Public Function Post(<FromBody> ByVal q) As HttpResponseMessage
         Try
 
             Dim strRsp As String = JsonConvert.SerializeObject(q, Newtonsoft.Json.Formatting.Indented)
             Dim cliente = New ClientModels
             cliente.Nome = IUnicoUtils.LocalizaTexto(strRsp, "Nome\"": \""", "\"",")
-            cliente.Cpf = IUnicoUtils.LocalizaTexto(strRsp, "Cpf\"": \""", "\"",")
+            cliente.Cnpj = IUnicoUtils.LocalizaTexto(strRsp, "Cnpj\"": \""", "\"",")
+            cliente.Telefone = IUnicoUtils.LocalizaTexto(strRsp, "Telefone\"": \""", "\"",")
+            cliente.Email = IUnicoUtils.LocalizaTexto(strRsp, "Email\"": \""", "\"",")
 
             Regras.VerificaInfoCliente(cliente)
 
@@ -52,12 +57,12 @@ Public Class ClientController
         End Try
     End Function
 
-    ' PUT api/values/5
+    ' PUT api/Client/5
     Public Sub PutValue(ByVal id As Integer, <FromBody()> ByVal value As String)
 
     End Sub
 
-    ' DELETE api/values/5
+    ' DELETE api/Client/5
     Public Function DeleteValue(ByVal id As Integer) As HttpResponseMessage
         Try
             Querys.ExecQuery($"DELETE FROM [dbo].[UNCCLIENTES] WHERE CODCLIENTE = {id}")

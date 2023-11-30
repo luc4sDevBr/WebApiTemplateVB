@@ -42,14 +42,17 @@ Public Class Querys
             Dim obj As New dao
         Try
             obj.conectar()
-            Dim strvermsg As New SqlCommand("SELECT NOME, CPF FROM UNCCLIENTES (NOLOCK)", obj.SQLCNN)
+            Dim strvermsg As New SqlCommand("SELECT CODCLIENTE, NOME, CNPJ, TELEFONE, EMAIL FROM UNCCLIENTES (NOLOCK)", obj.SQLCNN)
             Dim rsvermsg = strvermsg.ExecuteReader
 
             While rsvermsg.Read
 
                 Dim clienteView As New ClientModels
+                clienteView.CodCliente = rsvermsg("CODCLIENTE")
                 clienteView.Nome = rsvermsg("NOME")
-                clienteView.Cpf = rsvermsg("CPF")
+                clienteView.Cnpj = If(IsDBNull(rsvermsg("CNPJ")) = False, rsvermsg("CNPJ"), "")
+                clienteView.Telefone = If(IsDBNull(rsvermsg("TELEFONE")) = False, rsvermsg("TELEFONE"), "")
+                clienteView.Email = If(IsDBNull(rsvermsg("EMAIL")) = False, rsvermsg("EMAIL"), "")
 
                 lisClientsTemp.Add(clienteView)
             End While
@@ -73,6 +76,7 @@ Public Class Querys
             Dim clienteView As New ClientModels
             If rsvermsg.Read Then
 
+                clienteView.CodCliente = rsvermsg("CODCLIENTE")
                 clienteView.Nome = rsvermsg("NOME")
                 clienteView.Cpf = rsvermsg("CPF")
 

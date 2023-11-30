@@ -6,7 +6,7 @@
     Public Shared Sub VerificaInfoCliente(cliente As ClientModels)
         Try
             'Regras para validar inserção no banco
-            Querys.ExecQuery($"INSERT INTO [dbo].[UNCCLIENTES] ([NOME] ,[CPF]) VALUES ('{cliente.Nome}','{cliente.Cpf}')")
+            Querys.ExecQuery($"INSERT INTO [dbo].[UNCCLIENTES] ([NOME] , [CNPJ], [TELEFONE], [EMAIL]) VALUES ('{cliente.Nome}','{cliente.Cnpj}', '{cliente.Telefone}','{cliente.Email}')")
         Catch ex As Exception
 
         End Try
